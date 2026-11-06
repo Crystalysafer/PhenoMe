@@ -41,7 +41,7 @@ PhenoMe 从普通 RGB 照片中分割植物器官，利用画面中的色卡与�
 版本化安装包尚未发布。
 
 > 模型权重不在本仓库中——安装包已内置全部权重；源码运行请按下表单独
-> 获取（或直接下载 GitHub release 中的 `models.zip`）。
+> 获取（或从上方 Zenodo 记录下载 `models.zip`）。
 
 Web 前端的在线演示见 <https://webpheno.me>。
 

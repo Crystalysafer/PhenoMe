@@ -44,7 +44,7 @@ separately; a new versioned v2 installer has not yet been published.
 
 > Model weights are not part of this repository — the installer bundles all
 > of them; for source runs fetch them individually per the table below (or
-> grab `models.zip` from the GitHub release).
+> grab `models.zip` from the Zenodo record above).
 
 A live demo of the web front end runs at <https://webpheno.me>.
 

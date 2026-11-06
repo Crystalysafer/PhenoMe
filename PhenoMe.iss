@@ -31,9 +31,10 @@ OutputBaseFilename=PhenoMeInstaller
 ; compress further anyway.
 Compression=lzma2/fast
 SolidCompression=no
-; Payload exceeds Windows' ~4.2 GB single-setup-exe limit -> slice output
+; Payload exceeds Windows' ~4.2 GB single-setup-exe limit -> one max-size
+; slice next to the launcher exe (DiskSliceSize=max needs Inno >= 6.5.2)
 DiskSpanning=yes
-DiskSliceSize=2100000000
+DiskSliceSize=max
 WizardStyle=modern
 WizardResizable=yes
 ArchitecturesAllowed=x64compatible
