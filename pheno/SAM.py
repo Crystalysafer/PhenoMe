@@ -243,7 +243,12 @@ class SAM:
                 device = "cpu"
                 self.device = device
 
-        # Load model
+        # Load model. Absent weights must not kill the app: a failed load
+        # just leaves predictor=None and every segmentation action reports
+        # a clear "weights not installed" error instead (see _infer).
+        self.sam = None
+        self.predictor = None
+        self._mask_generator_cls = None
         try:
             self._load_backend(device)
 
@@ -258,10 +263,11 @@ class SAM:
                 print("Trying CPU mode...")
                 device = "cpu"
                 self.device = device
-                self._load_backend(device)
-                print("[OK] CPU mode initialization successful")
-            else:
-                raise
+                try:
+                    self._load_backend(device)
+                    print("[OK] CPU mode initialization successful")
+                except Exception as e2:
+                    print(f"[FAIL] CPU fallback also failed: {e2}")
         
         self.input_point = []
         self.input_label = []
@@ -328,6 +334,12 @@ class SAM:
 
     def _infer(self, op):
         """Run one model call; on a genuine CUDA failure, drop to CPU and retry."""
+        if self.predictor is None:
+            raise RuntimeError(
+                "No segmentation model is installed. Download the model "
+                "archive (models.zip), unzip it next to the application so "
+                "that models/ exists, then restart PhenoMe."
+            )
         try:
             return op()
         except Exception as e:
@@ -475,6 +487,12 @@ class SAM:
 
     def set_image(self, image):
         """Set image with memory management"""
+        if self.predictor is None:
+            raise RuntimeError(
+                "No segmentation model is installed. Download the model "
+                "archive (models.zip), unzip it next to the application so "
+                "that models/ exists, then restart PhenoMe."
+            )
         image_hash = hashlib.md5(image).hexdigest()
         if self.current_image_hash == image_hash:
             print("Same image, skipping...")

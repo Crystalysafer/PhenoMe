@@ -10,9 +10,10 @@ build_v2.bat
 
 `build_v2.bat` runs `python -m PyInstaller --clean PhenoMe.spec`.
 `PhenoMe.spec` bundles the application, the Qt resources and the model
-directories into `dist/PhenoMe/PhenoMe.exe`. The bundled PyTorch build
-provides CUDA support; the SAM checkpoint and RulerNet weights are *not*
-embedded — they ship beside the exe (see `README.md` for the download links).
+directories into `dist/PhenoMe/PhenoMe.exe`. Model weights under `models/`
+are bundled when present, so a full staging produces an all-in-one build;
+the bundled PyTorch build provides CUDA support (see `README.md` for the
+model download table).
 
 Note: `build_v2.bat` first runs `python test_build.py`, a dependency smoke
 test that fails fast on a broken environment; a failure only warns — the
@@ -21,11 +22,24 @@ build continues so optional-component gaps do not block packaging.
 The packaged app runs windowed (no console). Crash reports are written to
 `%LOCALAPPDATA%/PhenoMe/logs/` by the faulthandler installed in `main.py`.
 
-## 2. Installer → `PhenoMeInstaller.exe`
+## 2. Installer → `dist/PhenoMeInstaller.exe`
 
-The `dist/PhenoMe/` folder is wrapped into the single-file installer
-`PhenoMeInstaller.exe` that is deposited on Zenodo. This step is currently
-performed outside the repository.
+`PhenoMe.iss` (Inno Setup 6) wraps `dist/PhenoMe/` into the single-file
+installer that is deposited on Zenodo:
+
+```bat
+:: generate the wizard icon once (needs PIL in the build env)
+python -c "from PIL import Image; Image.open('pheno/icons/icon.png').save('build/icon.ico', sizes=[(16,16),(32,32),(48,48),(64,64),(128,128),(256,256)])"
+
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" PhenoMe.iss
+```
+
+The installer uses a stable `AppId`, so later releases upgrade the same
+installation. It installs to Program Files, creates Start-menu and
+(optional) desktop shortcuts, and registers a standard uninstall entry.
+The installer is all-in-one (includes `models/`); a standalone
+`models.zip` of the same weights is attached to the GitHub release for
+source-tree users.
 
 ## GPU compatibility
 
