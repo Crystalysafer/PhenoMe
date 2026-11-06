@@ -24,7 +24,7 @@ DefaultDirName={autopf}\PhenoMe
 DefaultGroupName=PhenoMe
 DisableProgramGroupPage=yes
 LicenseFile=LICENSE
-OutputDir=dist
+OutputDir=installer
 OutputBaseFilename=PhenoMeInstaller
 ; The payload is ~9 GB of model weights; lzma2/fast keeps the single-file
 ; build quick — the weights are already dense binary formats and barely
