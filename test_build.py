@@ -22,8 +22,16 @@ REQUIRED = [
     "matplotlib", "PIL", "cv2",
     # misc pinned deps
     "yaml", "requests", "urllib3", "certifi", "charset_normalizer", "idna",
+    # system monitor (CPU/RAM meters in the status bar)
+    "psutil",
     # application package
     "pheno", "algorithms",
+]
+
+# plain `import cv2` succeeds on non-contrib builds too; the colour-chart
+# step needs cv2.mcc which only ships in opencv-contrib-*.
+FEATURE_CHECKS = [
+    ("cv2", "mcc", "colour-chart correction needs opencv-contrib-python-headless"),
 ]
 
 OPTIONAL = [
@@ -49,6 +57,18 @@ def main() -> int:
     print("\nRequired modules:")
     for name in REQUIRED:
         if not _try_import(name):
+            failures += 1
+
+    print("\nFeature checks:")
+    for mod, attr, why in FEATURE_CHECKS:
+        try:
+            ok = hasattr(importlib.import_module(mod), attr)
+        except Exception as exc:  # noqa: BLE001
+            ok = False
+            print(f"  FAIL {mod}.{attr}: {type(exc).__name__}: {exc}")
+        else:
+            print(f"  {mod}.{attr}: {'ok' if ok else f'missing ({why})'}")
+        if not ok:
             failures += 1
 
     print("\nOptional modules:")

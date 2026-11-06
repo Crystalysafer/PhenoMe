@@ -224,6 +224,18 @@ class TextDetector:
 
         from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
 
+        # HF's GroundingDino module JIT-compiles its deformable-attention
+        # CUDA kernel whenever ninja is on PATH. In the packaged app no MSVC
+        # toolchain exists, so every attention layer retries the build and
+        # dies spawning console windows. Force the pure-PyTorch fallback the
+        # upstream try/except already selects on failure.
+        try:
+            from transformers.models.grounding_dino import modeling_grounding_dino
+
+            modeling_grounding_dino.is_ninja_available = lambda: False
+        except Exception:
+            pass
+
         self._ensure_model_files()
         self.processor = AutoProcessor.from_pretrained(str(self.model_dir))
         model_dtype = torch.float16 if self.device.type == "cuda" else torch.float32

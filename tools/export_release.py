@@ -99,7 +99,7 @@ def copy_tree(src: Path, dst: Path) -> int:
     return count
 
 
-def _force_remove(path, _fn, _exc):
+def _force_remove(_fn, path, _exc):
     """rmtree callback: git object files are read-only on Windows."""
     os.chmod(path, 0o666)
     os.unlink(path)
