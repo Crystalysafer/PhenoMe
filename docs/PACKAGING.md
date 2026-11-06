@@ -24,8 +24,12 @@ The packaged app runs windowed (no console). Crash reports are written to
 
 ## 2. Installer → `dist/PhenoMeInstaller.exe`
 
-`PhenoMe.iss` (Inno Setup 6) wraps `dist/PhenoMe/` into the single-file
-installer that is deposited on Zenodo:
+`PhenoMe.iss` (Inno Setup 6) wraps `dist/PhenoMe/` into the installer set
+that is deposited on Zenodo. The payload exceeds Windows' ~4.2 GB
+single-executable limit, so `DiskSpanning` is enabled: compilation yields
+`PhenoMeInstaller.exe` plus `PhenoMeInstaller-*.bin` slices (2.1 GB
+each). All files must sit in the same folder; running the .exe installs
+the app.
 
 ```bat
 :: generate the wizard icon once (needs PIL in the build env)

@@ -26,10 +26,8 @@ species/organs plug in without retraining.
   organ-specific traits (pod curvedness and tip sharpness, seed caruncle area
   and curvature, ...). Every number traces back to a mask, a prompt and a
   calibration stored in a `.pheno.json` sidecar.
-- <img src="pheno/icons/file.png" width="18"> **Two front ends, one engine** —
-  an offline PyQt5 desktop application with
-  batch processing, mask editing and a review window; and a browser interface
-  (FastAPI) for the single-image workflow — same analysis core, same results.
+- <img src="pheno/icons/file.png" width="18"> **Offline desktop app** —
+  a PyQt5 application with batch processing, mask editing and a review window.
 - <img src="pheno/icons/manageAlgorithm.png" width="18"> **Extensible without code** —
   define new traits in a node-graph editor with
   automatic dimensional analysis, or drop a two-function Python file into
@@ -58,8 +56,8 @@ pip install -r requirements.txt
 # plus: models/sam_vit_h_4b8939.pth and models/grounding-dino-tiny/ (see below)
 
 python main.py                      # desktop application
-python -m uvicorn web.app:app --host 0.0.0.0 --port 8000   # web service
 ```
+
 
 Model assets expected by the source tree:
 
@@ -80,7 +78,6 @@ see `docs/PACKAGING.md`.
 | --- | --- |
 | `main.py` | desktop entry point |
 | `pheno/` | application + shared analysis core (SAM, calibration, traits, UI) |
-| `web/` | FastAPI web front end |
 | `algorithms/` | trait-algorithm plugins + authoring guide |
 | `tools/` | evaluation scripts and diagnostics |
 | `docs/` | user and developer documentation |
@@ -89,7 +86,6 @@ see `docs/PACKAGING.md`.
 
 - `docs/TUTORIAL.md` — user guide generated from the in-app help in the
   public source snapshot by `tools/export_release.py`
-- `docs/ANNOTATION_FORMAT.md` — `.pheno.json` sidecar format
 - `docs/BATCH_RECIPES.md` — batch-processing recipes
 - `algorithms/README_EN.md` — plugin authoring guide
 

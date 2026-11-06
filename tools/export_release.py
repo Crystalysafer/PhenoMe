@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -21,17 +22,22 @@ ROOT = Path(__file__).resolve().parent.parent
 # Top-level files copied verbatim.
 FILES = [
     "main.py",
-    "requirements.txt",
     "PhenoMe.spec",
+    "PhenoMe.iss",
     "build_v2.bat",
     "test_build.py",
-    "start_web.bat",
-    "README.md",
     "LICENSE",
 ]
 
-# Directories copied in full (minus __pycache__ / *.pyc).
-DIRS = ["pheno", "web", "algorithms"]
+# Top-level files copied after stripping private-only material:
+#   README.md         — blocks between <!-- PUBLIC-OMIT-START/END --> markers
+#   requirements.txt  — lines carrying a "# public:omit" comment (web deps)
+FILTERED_FILES = ["README.md", "requirements.txt"]
+
+# Directories copied in full (minus __pycache__ / *.pyc). The web front end
+# is private-only: deployment is hard to reproduce and the hosted service at
+# webpheno.me is what reviewers should use.
+DIRS = ["pheno", "algorithms"]
 
 # Curated subsets.
 TOOLS = [
@@ -45,14 +51,14 @@ TOOLS = [
     "probe_blackwell.py",
 ]
 
+# ANNOTATION_FORMAT.md documents the private pheno<->web contract and stays
+# out of the public tree with the web front end itself.
 DOCS = [
-    "ANNOTATION_FORMAT.md",
     "BATCH_RECIPES.md",
     "PACKAGING.md",
 ]
 
-# Paths excluded from the full-directory copy: private demo art only. The web
-# samples ship so every sample button in the public build actually works.
+# Paths excluded from the full-directory copy: private demo art only.
 DIR_EXCLUDES = {"pheno/icons/demo.png"}
 
 GENERATED = {"docs/TUTORIAL.md", ".gitignore"}  # rendered below, not repo files
@@ -70,13 +76,26 @@ models/
 """
 
 
+_OMIT_BLOCK_RE = re.compile(
+    r"^[ \t]*<!--[ \t]*PUBLIC-OMIT-START[ \t]*-->.*?^[ \t]*<!--[ \t]*PUBLIC-OMIT-END[ \t]*-->[ \t]*\n?",
+    re.DOTALL | re.MULTILINE,
+)
+
+
+def strip_for_public(text: str) -> str:
+    """Remove material that only makes sense in the private repo."""
+    text = _OMIT_BLOCK_RE.sub("", text)
+    lines = [line for line in text.splitlines() if "# public:omit" not in line]
+    return "\n".join(lines) + "\n"
+
+
 def render_tutorial() -> str:
     """Render the shared in-app help into a standalone markdown guide."""
     sys.path.insert(0, str(ROOT))
-    from pheno.help_content import DESKTOP, WEB, help_document
+    from pheno.help_content import DESKTOP, help_document
 
     parts = ["# PhenoMe user guide\n"]
-    for platform, heading in ((DESKTOP, "Desktop application"), (WEB, "Web service")):
+    for platform, heading in ((DESKTOP, "Desktop application"),):
         doc = help_document("en", platform)
         parts.append(f"\n## {heading}\n\n{doc['intro']}\n")
         for section in doc["sections"]:
@@ -121,6 +140,13 @@ def main() -> int:
         src = ROOT / name
         if src.exists():
             shutil.copy2(src, dest / name)
+            count += 1
+    for name in FILTERED_FILES:
+        src = ROOT / name
+        if src.exists():
+            (dest / name).write_text(
+                strip_for_public(src.read_text(encoding="utf-8")), encoding="utf-8"
+            )
             count += 1
     for name in DIRS:
         count += copy_tree(ROOT / name, dest / name)
