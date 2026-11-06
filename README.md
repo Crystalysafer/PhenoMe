@@ -1,5 +1,7 @@
 # <img src="pheno/icons/icon.png" width="32"> PhenoMe
 
+**English** | [简体中文](README.zh-CN.md)
+
 A user-friendly software for standardized high-throughput phenotyping of
 plant organs. One photograph in — calibrated, per-object trait tables out.
 
@@ -69,8 +71,7 @@ Model assets expected by the source tree:
 | `models/grounding-dino-tiny/` | Grounding DINO Tiny (config + weights + tokenizer) | [IDEA-Research/grounding-dino-tiny](https://huggingface.co/IDEA-Research/grounding-dino-tiny) |
 | `models/rulernet.onnx` | RulerNet tick-mark detector | bundled with the installer / Zenodo `models.zip` |
 
-`build_v2.bat` + `PhenoMe.spec` produce the packaged Windows build —
-see `docs/PACKAGING.md`.
+`build_v2.bat` + `PhenoMe.spec` produce the packaged Windows build.
 
 ## Layout
 
@@ -79,14 +80,9 @@ see `docs/PACKAGING.md`.
 | `main.py` | desktop entry point |
 | `pheno/` | application + shared analysis core (SAM, calibration, traits, UI) |
 | `algorithms/` | trait-algorithm plugins + authoring guide |
-| `tools/` | evaluation scripts and diagnostics |
-| `docs/` | user and developer documentation |
 
 ## Documentation
 
-- `docs/TUTORIAL.md` — user guide generated from the in-app help in the
-  public source snapshot by `tools/export_release.py`
-- `docs/BATCH_RECIPES.md` — batch-processing recipes
 - `algorithms/README_EN.md` — plugin authoring guide
 
 ## Citation

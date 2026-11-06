@@ -57,8 +57,7 @@ a = Analysis(
     datas=[
         # 包含pheno包的所有文件
         ('pheno', 'pheno'),
-        # 自定义表型算法随包分发
-        ('algorithms', 'algorithms'),
+        # algorithms/ 不随包分发——算法是用户插件，由用户在运行时经文件对话框加载
     ] + text_detector_files + sam2_model_files + sam2_datas,
     hiddenimports=[
         # === PyTorch 深度学习框架 ===
@@ -244,10 +243,6 @@ a = Analysis(
         'pheno.widgets',
         'pheno.zoomWidget',
         'pheno.TextDetector',
-
-        # === 自定义算法模块（随 algorithms/ 目录分发） ===
-        'algorithms.beanSeedPheno',
-        'algorithms.beanPodPheno',
     ] + sam2_hidden + [
         
         # === 其他工具库 ===
