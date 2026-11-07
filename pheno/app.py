@@ -329,6 +329,7 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
         self.canvas.maskPolygon.connect(self._onRegionDrawn)
         self.canvas.mousePositionChanged.connect(self.updateMousePosition)
         self.canvas.shapePicked.connect(self._onCanvasShapePicked)
+        self.canvas.contextMenuRequested.connect(self._onCanvasContextMenu)
         self.canvas.brushStrokeStarted.connect(self._onBrushStrokeStarted)
         self.canvas.brushStrokeFinished.connect(self._onBrushStrokeFinished)
 
@@ -408,6 +409,12 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
             tr('&Delete Annotation'), self.deleteAnnotation,
             None, 'deleteAnn',
             tr('Delete the saved annotation of this image'), enabled=True)
+
+        # Canvas snapshot: grabs the painted view (image, masks, scale marks)
+        # as-shown, for sharing a quick figure without reopening the file.
+        exportCanvas = action(
+            tr('&Export Canvas Image'), self.exportCanvasImage,
+            None, 'save', tr('Save the current canvas view as an image'))
 
         
         manageAlgorithm = action('&Manage Algorithms', self.manageAlgorithm, shortcuts['manageAlgorithm'], 'manageAlgorithm',
@@ -518,7 +525,7 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
             editMenu=(undo, None, click, cutOut, delete, editMask, None, textDetect, auto, None, colorChecker, rulerDetection),
             exportMasks=exportMasks, calcSelectedMasks=calcSelectedMasks,
             colorChecker=colorChecker, rulerDetection=rulerDetection, setScale=setScale,
-            batchProcessing=batchProcessing,
+            batchProcessing=batchProcessing, exportCanvas=exportCanvas,
         )
 
         englishLanguage = action(
@@ -598,6 +605,7 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
             exportMasks: ('&Export Masks', "Export the selected objects' masks as PNG files"),
             calcSelectedMasks: ('&Calculate', 'Calculate Selected Objects'),
             batchProcessing: ('&Batch', 'Batch Processing'),
+            exportCanvas: ('&Export Canvas Image', 'Save the current canvas view as an image'),
             help: ('&Homepage', 'Open the project homepage'),
             userGuide: ('&User Guide', 'Show the built-in user guide'),
             zoomIn: ('Zoom &In', 'Increase zoom level'),
@@ -2144,6 +2152,32 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
         for act in (self.actions.editMask, self.actions.delete):
             menu.addAction(act)
         menu.exec_(self.shapeList.viewport().mapToGlobal(pos))
+
+    def _onCanvasContextMenu(self, shape, global_pos):
+        """画布右键：命中对象时给出与列表一致的 Edit Mask / Delete，
+        任何位置都可导出当前画布图。canvas 在发出本信号前已先 emit
+        ``shapePicked`` 完成选中，动作可用性随之就位。"""
+        menu = QtWidgets.QMenu(self)
+        if shape is not None:
+            for act in (self.actions.editMask, self.actions.delete):
+                menu.addAction(act)
+            menu.addSeparator()
+        menu.addAction(self.actions.exportCanvas)
+        menu.exec_(global_pos)
+
+    def exportCanvasImage(self):
+        """把画布当前绘制结果（图像+掩膜+标注）存成一张图。"""
+        if self.canvas.pixmap.isNull():
+            return
+        stem = os.path.splitext(os.path.basename(self.filename or 'canvas'))[0]
+        path, _ = QFileDialog.getSaveFileName(
+            self, tr('Export Canvas Image'),
+            os.path.join(self.lastOpenDir or '', stem + '_canvas.png'),
+            'PNG (*.png);;JPEG (*.jpg *.jpeg)')
+        if not path:
+            return
+        self.canvas.grab().save(path)
+        self.status(tr('Canvas exported: %s') % path)
 
     def reviewBatchResults(self, folder=None):
         """Open the standalone review window for a batch output folder."""

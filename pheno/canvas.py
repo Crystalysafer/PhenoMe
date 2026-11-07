@@ -359,6 +359,7 @@ class Canvas(QtWidgets.QWidget):
     brushRadiusChanged = QtCore.Signal(int)  # 滚轮改完半径，HUD 实时刷新读数
     shapePicked = QtCore.Signal(object)  # NORMAL 模式点中已分割对象（None=空白）
     measureStageChanged = QtCore.Signal(int)  # 测量进度：0=等第一点，1=等第二点
+    contextMenuRequested = QtCore.Signal(object, object)  # (shape|None, 全局 QPoint)
 
 
     NORMAL, DRAW, MASK, AUTO, MEASURE, BRUSH = 0, 1, 2, 3, 4, 5
@@ -710,6 +711,14 @@ class Canvas(QtWidgets.QWidget):
 
         elif self.mode == self.NORMAL and ev.button() == QtCore.Qt.LeftButton:
             self._pickShapeAt(pos)
+        elif self.mode == self.NORMAL and ev.button() == QtCore.Qt.RightButton:
+            # 右键先命中并选中（与列表右键行为一致），再弹上下文菜单；
+            # 空白处 emit None 即取消选择。
+            shape = self._shapeAt(pos)
+            self.shapePicked.emit(shape)
+            global_pos = ev.globalPos() if QT5 else ev.globalPosition().toPoint()
+            self.contextMenuRequested.emit(shape, global_pos)
+
     def _pickShapeAt(self, pos):
         """命中测试 ``pos`` 处已提交的对象并发出 ``shapePicked``。
 
@@ -718,6 +727,11 @@ class Canvas(QtWidgets.QWidget):
         "吞掉"内部小对象的点击，用户指的几乎总是上面那个小东西。
         空白处 emit None，由主窗口取消选择。
         """
+        self.shapePicked.emit(self._shapeAt(pos))
+
+    def _shapeAt(self, pos):
+        """``pos`` 处最上层的已提交对象（掩膜逐像素判中，多边形做外接
+        框+包含测试回退）；无命中返回 None。"""
         x, y = int(pos.x()), int(pos.y())
         hits = []
         for shape in self.shapes:
@@ -741,7 +755,7 @@ class Canvas(QtWidgets.QWidget):
                 rect = shape.boundingRect()
                 return rect.width() * rect.height()
             hits.sort(key=_hit_area)
-        self.shapePicked.emit(hits[0] if hits else None)
+        return hits[0] if hits else None
 
     def mouseMoveEvent(self, ev):
         if QT5:
