@@ -114,7 +114,17 @@ class FormulaGraph:
     # How each op maps (dim_a, dim_b) -> result dimension; None = unit-less.
     @staticmethod
     def _opDimension(op, da, db):
-        if op in ("add", "sub", "min", "max", "abs", "neg", "round"):
+        # An unwired input (None dimension) makes the result unit-less.
+        if da is None:
+            return None
+        if op in ("abs", "neg", "round"):
+            return da
+        if op == "sqrt":
+            # Half-integer results (e.g. sqrt of a length) are meaningless.
+            return da / 2.0 if da % 2 == 0 else None
+        if db is None:
+            return None
+        if op in ("add", "sub", "min", "max", "mod"):
             # Same-dimension operands keep the dimension; mismatched inputs
             # make the result meaningless.
             return da if da == db else None
@@ -122,14 +132,7 @@ class FormulaGraph:
             return da + db
         if op == "div":
             return da - db
-        if op == "pow":
-            # Only integer exponents of a dimension keep a meaning.
-            return None
-        if op == "mod":
-            return da if da == db else None
-        if op == "sqrt":
-            # Half-integer results (e.g. sqrt of a length) are meaningless.
-            return da / 2.0 if da % 2 == 0 else None
+        # pow and anything else have no meaningful unit.
         return None
 
     def _dimensionFor(self, node):

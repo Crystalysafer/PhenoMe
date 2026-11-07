@@ -51,9 +51,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
 
 [Files]
-; No model weights in the installer (~4 GB saved) — models.zip on Zenodo
-; carries them; the app runs without them and asks for the archive when a
-; segmentation action needs one.
+; All-in-one installer: model weights are bundled (dist\PhenoMe\models),
+; so the app runs segmentation offline out of the box.
 Source: "dist\PhenoMe\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
 
 [Icons]
