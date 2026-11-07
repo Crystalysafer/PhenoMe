@@ -105,6 +105,15 @@ class PhenomicsCalculator:
         mask = shape.mask  # BW image (binary mask)
         mask = (mask > 0).astype(np.uint8)
 
+        # 插件契约：始终 4 通道 BGRA，alpha 通道标记对象像素。
+        # 批量路径传入的 PIL 图只有 3 通道，会让按 alpha 分支编写的
+        # 算法把背景也当作前景（如 myAlgorithms 的全像素 KMeans）。
+        if rgbImg.ndim == 3 and rgbImg.shape[2] == 3:
+            rgbImg = cv2.cvtColor(rgbImg, cv2.COLOR_RGB2RGBA)
+        if rgbImg.ndim == 3 and rgbImg.shape[2] == 4:
+            rgbImg = rgbImg.copy()
+            rgbImg[:, :, 3] = mask * 255
+
         name = shape.label
         results = [name]
 

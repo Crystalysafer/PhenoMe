@@ -16,7 +16,9 @@ def getHeaders():
 def calcTraits(rgb_img, mask, scale_per_pixel=1.0):
     """
     Parameters:
-    - rgb_img: RGB image (numpy array, HxWx3)
+    - rgb_img: original image (numpy array, HxWx4 RGBA). The alpha channel
+      marks the current object's pixels (255 inside mask, 0 in background);
+      use rgb_img[:,:,:3] if you only need colour channels.
     - mask: binary mask (HxW, >0 is foreground)
     - scale_per_pixel: real-world size of one pixel
 

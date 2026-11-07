@@ -16,7 +16,8 @@ def getHeaders():
 def calcTraits(rgb_img, mask, scale_per_pixel=1.0):
     """
     参数:
-    - rgb_img: RGB 图像 (numpy 数组, HxWx3)
+    - rgb_img: 原始图像 (numpy 数组, HxWx4 RGBA)。alpha 通道标记当前对象
+      像素（mask 内为 255，背景为 0）；如需 3 通道取 rgb_img[:,:,:3]。
     - mask: 二值掩码 (HxW, >0 为前景)
     - scale_per_pixel: 每像素对应的真实世界尺度
 
