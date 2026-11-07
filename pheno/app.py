@@ -617,7 +617,11 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
             getattr(self.actions, _name).setChecked(_theme_mode() == _wanted)
         self.setLanguage(get_language(), persist=False)
 
-        self.status('%s started.' % __appname__)
+        # Deferred until the event loop runs: shown during __init__ the
+        # message paints underneath the status-bar widgets and leaves a
+        # garbled half-overlap with the model switcher.
+        QtCore.QTimer.singleShot(
+            0, lambda: self.status('%s started.' % __appname__))
 
         # Application state.
         self.image = QtGui.QImage()
