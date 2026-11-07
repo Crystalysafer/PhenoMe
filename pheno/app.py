@@ -338,6 +338,7 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
         # 和 coordLabel 一样叠在 scrollArea 上随窗口尺寸重排。
         self._buildEditHud(scrollArea)
         self.canvas.brushRadiusChanged.connect(self._onBrushRadiusChanged)
+        self.canvas.measureStageChanged.connect(self._onMeasureStageChanged)
         # Esc 退出画笔模式 —— 比回到右键菜单再点一次顺手。
         QtWidgets.QShortcut(QtGui.QKeySequence(Qt.Key_Escape), self,
                             activated=self._exitBrushMode)
@@ -1554,6 +1555,11 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
         region.addWidget(region_exit)
         layout.addWidget(self._hudRegion)
 
+        # Measure section: stage-aware prompt for the Set Scale draw flow,
+        # replacing the painted yellow text that used to sit on the canvas.
+        self._hudMeasure = QtWidgets.QLabel('', hud)
+        layout.addWidget(self._hudMeasure)
+
         hud.adjustSize()
         hud.hide()
         self._editHud = hud
@@ -1593,19 +1599,32 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
         reviewing = getattr(self, '_reviewReturnDialog', None) is not None
         brushing = self.canvas.isBrushing()
         masking = self.canvas.isMasking()
+        measuring = self.canvas.isMeasuring()
         self._hudBack.setVisible(reviewing)
         self._hudBrush.setVisible(brushing)
         self._hudRegion.setVisible(masking)
+        self._hudMeasure.setVisible(measuring)
         if brushing:
             self._hudRadius.setText(
                 tr('Brush Ø {radius} px', radius=self.canvas.brush_radius))
-        hud.setVisible(reviewing or brushing or masking)
+        hud.setVisible(reviewing or brushing or masking or measuring)
         hud.adjustSize()
         self.updateEditHudPosition()
 
     def _onBrushRadiusChanged(self, radius):
         if getattr(self, '_hudRadius', None) is not None:
             self._hudRadius.setText(tr('Brush Ø {radius} px', radius=radius))
+
+    def _onMeasureStageChanged(self, stage):
+        if getattr(self, '_hudMeasure', None) is None:
+            return
+        if stage <= 0:
+            self._hudMeasure.setText(tr(
+                'Measuring: click the first point (right-click to cancel)'))
+        else:
+            self._hudMeasure.setText(tr(
+                'Measuring: click the second point (right-click to cancel)'))
+        self._updateEditHud()
 
     def _exitBrushMode(self):
         if not self.canvas.isBrushing():
@@ -3619,6 +3638,8 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
             def on_measure_complete(length):
                 # 断开信号
                 self.canvas.line_drawn.disconnect(on_measure_complete)
+                # 退出测量模式后收起 HUD 提示（mode 已回到 NORMAL）
+                self._updateEditHud()
                 
                 # 如果测量成功，填入长度
                 if length and length > 0:

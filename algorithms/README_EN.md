@@ -1,7 +1,7 @@
 # Custom trait algorithms
 
 This directory holds PhenoMe's custom trait algorithms. On the desktop,
-`Manage Algorithms → Load Custom Algorithms (.py)` opens this folder by default.
+`Manage Algorithms → Load Custom Algorithms` opens this folder by default.
 
 ## Algorithm file format
 

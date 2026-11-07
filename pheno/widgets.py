@@ -764,7 +764,7 @@ class ManageAlgorithmDialog(QDialog):
         bottom_buttons_layout = QHBoxLayout()
 
         # 顶部导入按钮
-        import_button = QPushButton(tr("Load Custom Algorithms (.py)"))
+        import_button = QPushButton(tr("Load Custom Algorithms"))
         import_button.setToolTip("Import Python files with calcTraits & getHeaders")
         import_button.clicked.connect(self.loadCustom)
 

@@ -1,7 +1,7 @@
 # 自定义表型算法
 
 这个目录存放 PhenoMe 的自定义表型算法。在桌面端 `Manage Algorithms →
-Load Custom Algorithms (.py)` 时，对话框会默认定位到这里。
+Load Custom Algorithms` 时，对话框会默认定位到这里。
 
 ## 算法文件格式
 

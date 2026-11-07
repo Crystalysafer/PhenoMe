@@ -358,6 +358,7 @@ class Canvas(QtWidgets.QWidget):
     brushStrokeFinished = QtCore.Signal(object)  # 笔刷抬笔，载荷为被修改的 Shape
     brushRadiusChanged = QtCore.Signal(int)  # 滚轮改完半径，HUD 实时刷新读数
     shapePicked = QtCore.Signal(object)  # NORMAL 模式点中已分割对象（None=空白）
+    measureStageChanged = QtCore.Signal(int)  # 测量进度：0=等第一点，1=等第二点
 
 
     NORMAL, DRAW, MASK, AUTO, MEASURE, BRUSH = 0, 1, 2, 3, 4, 5
@@ -593,6 +594,7 @@ class Canvas(QtWidgets.QWidget):
             self.overrideCursor(CURSOR_DRAW)  # 使用 overrideCursor 而不是 setCursor
             self.show_bgmask = False
             self.repaint()
+            self.measureStageChanged.emit(0)
 
         if mode == self.BRUSH and self.mode != self.BRUSH:
             self.mode = self.BRUSH
@@ -679,6 +681,7 @@ class Canvas(QtWidgets.QWidget):
                 if len(self.measure_line) == 0:
                     self.measure_line.append(pos)
                     self.update()
+                    self.measureStageChanged.emit(1)
                 elif len(self.measure_line) == 1:
                     self.measure_line.append(pos)
                     self.update()
@@ -970,22 +973,8 @@ class Canvas(QtWidgets.QWidget):
         p.save()
         
         if self.isMeasuring():
-            # 显示测量模式的提示 (文字不受缩放影响)
-            if len(self.measure_line) == 0:
-                # 还没有点击任何点
-                # 重置变换，让文字不受缩放影响
-                p.resetTransform()
-                p.setPen(QtGui.QPen(QtGui.QColor("yellow")))
-                font = QtGui.QFont()
-                font.setPointSize(18)  # 放大字体
-                font.setBold(True)
-                p.setFont(font)
-                p.drawText(15, 40, "Measuring Mode: Click to set first point")
-                p.drawText(15, 70, "Right-click to cancel measurement")
-                # 恢复变换用于绘制其他元素
-                p.scale(self.scale, self.scale)
-                p.translate(self.offsetToCenter())
-            elif len(self.measure_line) == 1:
+            # 测量中的画布反馈（提示文字在右上角 HUD）
+            if len(self.measure_line) == 1:
                 # 显示正在绘制的线（从第一个点到当前鼠标位置）
                 pen = QtGui.QPen(QtGui.QColor("cyan"), max(2, int(round(2.0 / self.scale))), QtCore.Qt.DashLine)
                 p.setPen(pen)
@@ -1020,20 +1009,7 @@ class Canvas(QtWidgets.QWidget):
                 p.setFont(font)
                 p.drawText(screen_midpoint, f"{distance:.1f} px")
                 p.restore()  # 恢复变换
-                
-                # 显示提示 (文字不受缩放影响)
-                p.resetTransform()
-                p.setPen(QtGui.QPen(QtGui.QColor("yellow")))
-                font = QtGui.QFont()
-                font.setPointSize(18)  # 放大字体
-                font.setBold(True)
-                p.setFont(font)
-                p.drawText(15, 40, "Click to set second point to complete")
-                p.drawText(15, 70, "Right-click to cancel measurement")
-                # 恢复变换
-                p.scale(self.scale, self.scale)
-                p.translate(self.offsetToCenter())
-                
+
             elif len(self.measure_line) == 2:
                 # 显示完整的测量线
                 pen = QtGui.QPen(QtGui.QColor("cyan"), 2, QtCore.Qt.SolidLine)
