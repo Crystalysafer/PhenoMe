@@ -88,8 +88,8 @@ python main.py                      # 桌面应用
 ## 引用
 
 如果你在研究中使用了 PhenoMe，请引用存档于
-<https://huggingface.co/datasets/Crystalysafer/phenome-artifacts>
-的软件版本——以及修订版发表后刊登于 *Plant Phenomics* 的配套论文。
+<https://doi.org/10.57967/hf/11486> 的软件版本——以及修订版发表后
+刊登于 *Plant Phenomics* 的配套论文。
 
 ## 许可证
 

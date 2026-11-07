@@ -91,10 +91,8 @@ Model assets expected by the source tree:
 ## Citation
 
 If you use PhenoMe in your research, please cite the software release
-archived at
-<https://huggingface.co/datasets/Crystalysafer/phenome-artifacts> — and
-the accompanying paper in *Plant Phenomics* once the revised version is
-published.
+archived at <https://doi.org/10.57967/hf/11486> — and the accompanying
+paper in *Plant Phenomics* once the revised version is published.
 
 ## License
 
