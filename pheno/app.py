@@ -2176,7 +2176,16 @@ class MainWindow(QtWidgets.QMainWindow, WindowMixin):
             'PNG (*.png);;JPEG (*.jpg *.jpeg)')
         if not path:
             return
-        self.canvas.grab().save(path)
+        # 只截取 pixmap 的实际显示区：scrollArea 会把画布控件撑满视口，
+        # 缩小的图四周是画布底色，整控件 grab 会带上白边。
+        s = self.canvas.scale
+        off = self.canvas.offsetToCenter()
+        img_rect = QtCore.QRect(
+            int(off.x() * s), int(off.y() * s),
+            int(self.canvas.pixmap.width() * s),
+            int(self.canvas.pixmap.height() * s))
+        rect = img_rect.intersected(self.canvas.rect())
+        self.canvas.grab(rect).save(path)
         self.status(tr('Canvas exported: %s') % path)
 
     def reviewBatchResults(self, folder=None):
