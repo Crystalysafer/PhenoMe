@@ -38,13 +38,16 @@ species/organs plug in without retraining.
 ## Getting the app
 
 The previous v1 installer is archived at
-<https://doi.org/10.5281/zenodo.19936151>. It is **not** the current v2
-source or a validated v2 installer. This source snapshot is provided
-separately; a new versioned v2 installer has not yet been published.
+<https://doi.org/10.5281/zenodo.19936151>.
+
+The current v2 release artifacts — the all-in-one Windows installer
+(`PhenoMe-2.0.0-setup.zip`) and a standalone weights archive for running
+from source (`models_v2.zip`) — are hosted on Hugging Face:
+<https://huggingface.co/datasets/Crystalysafer/phenome-artifacts>
 
 > Model weights are not part of this repository — the installer bundles all
-> of them; for source runs fetch them individually per the table below (or
-> grab `models.zip` from the Zenodo record above).
+> of them; for source runs grab `models_v2.zip` from the Hugging Face
+> record above (or fetch them individually per the table below).
 
 A live demo of the web front end runs at <https://webpheno.me>.
 
@@ -69,7 +72,7 @@ Model assets expected by the source tree:
 | `models/sam2/sam2.1_hiera_tiny.pt` | SAM2.1 Hiera-Tiny checkpoint | [facebookresearch/sam2](https://github.com/facebookresearch/sam2) |
 | `models/sam2/sam2.1_hiera_large.pt` | SAM2.1 Hiera-Large checkpoint | [facebookresearch/sam2](https://github.com/facebookresearch/sam2) |
 | `models/grounding-dino-tiny/` | Grounding DINO Tiny (config + weights + tokenizer) | [IDEA-Research/grounding-dino-tiny](https://huggingface.co/IDEA-Research/grounding-dino-tiny) |
-| `models/rulernet.onnx` | RulerNet tick-mark detector | bundled with the installer / Zenodo `models.zip` |
+| `models/rulernet.onnx` | RulerNet tick-mark detector | bundled with the installer / HF `models_v2.zip` |
 
 `build_v2.bat` + `PhenoMe.spec` produce the packaged Windows build.
 
@@ -87,9 +90,11 @@ Model assets expected by the source tree:
 
 ## Citation
 
-If you use PhenoMe in your research, please cite the archived software
-release (DOI on Zenodo, see above) — and the accompanying paper in
-*Plant Phenomics* once the revised version is published.
+If you use PhenoMe in your research, please cite the software release
+archived at
+<https://huggingface.co/datasets/Crystalysafer/phenome-artifacts> — and
+the accompanying paper in *Plant Phenomics* once the revised version is
+published.
 
 ## License
 

@@ -36,12 +36,15 @@ PhenoMe 从普通 RGB 照片中分割植物器官，利用画面中的色卡与�
 ## 获取应用
 
 旧版 v1 安装包存档于
-<https://doi.org/10.5281/zenodo.19936151>，它**不是**当前的 v2
-源码，也不是经过验证的 v2 安装包。本源代码快照单独提供；新的 v2
-版本化安装包尚未发布。
+<https://doi.org/10.5281/zenodo.19936151>。
 
-> 模型权重不在本仓库中——安装包已内置全部权重；源码运行请按下表单独
-> 获取（或从上方 Zenodo 记录下载 `models.zip`）。
+当前 v2 发布产物——一体化 Windows 安装包
+（`PhenoMe-2.0.0-setup.zip`）和源码运行所需的权重包
+（`models_v2.zip`）——托管在 Hugging Face：
+<https://huggingface.co/datasets/Crystalysafer/phenome-artifacts>
+
+> 模型权重不在本仓库中——安装包已内置全部权重；源码运行请从上方
+> Hugging Face 记录下载 `models_v2.zip`（或按下表单独获取）。
 
 Web 前端的在线演示见 <https://webpheno.me>。
 
@@ -66,7 +69,7 @@ python main.py                      # 桌面应用
 | `models/sam2/sam2.1_hiera_tiny.pt` | SAM2.1 Hiera-Tiny 权重 | [facebookresearch/sam2](https://github.com/facebookresearch/sam2) |
 | `models/sam2/sam2.1_hiera_large.pt` | SAM2.1 Hiera-Large 权重 | [facebookresearch/sam2](https://github.com/facebookresearch/sam2) |
 | `models/grounding-dino-tiny/` | Grounding DINO Tiny（配置 + 权重 + 分词器） | [IDEA-Research/grounding-dino-tiny](https://huggingface.co/IDEA-Research/grounding-dino-tiny) |
-| `models/rulernet.onnx` | RulerNet 刻度检测器 | 随安装包 / Zenodo `models.zip` 提供 |
+| `models/rulernet.onnx` | RulerNet 刻度检测器 | 随安装包 / HF `models_v2.zip` 提供 |
 
 `build_v2.bat` + `PhenoMe.spec` 可构建 Windows 打包版本。
 
@@ -84,8 +87,9 @@ python main.py                      # 桌面应用
 
 ## 引用
 
-如果你在研究中使用了 PhenoMe，请引用 Zenodo 上存档的软件版本（DOI
-见上文）——以及修订版发表后刊登于 *Plant Phenomics* 的配套论文。
+如果你在研究中使用了 PhenoMe，请引用存档于
+<https://huggingface.co/datasets/Crystalysafer/phenome-artifacts>
+的软件版本——以及修订版发表后刊登于 *Plant Phenomics* 的配套论文。
 
 ## 许可证
 
