@@ -249,3 +249,7 @@ class PhenomicsCalculator:
 
 PhenomicsCalculator.custom_algorithms = {'DEFAULT': PhenomicsCalculator.defaultPhenomics}
 PhenomicsCalculator.custom_headers = {'DEFAULT': PhenomicsCalculator.defaultHeaders()}
+# The built-in measurement set, bound directly so formula traits can always
+# reach it -- unchecking DEFAULT in Manage Algorithms only hides its columns
+# and must never make the base measurements unavailable.
+PhenomicsCalculator.default_algorithm = PhenomicsCalculator.defaultPhenomics

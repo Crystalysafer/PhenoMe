@@ -170,12 +170,18 @@ class NodeFormulaEditorDialog(QtWidgets.QDialog):
                 and getattr(window, "original_image", None) is not None:
             try:
                 from pheno.calcPheno import PhenomicsCalculator
+                from pheno.lib import qimage_to_cv2
+                import numpy as np
                 pixmap = window.canvas.pixmap
                 scale = window.canvas.scale_per_pixel
-                # Same computation path the traits table uses; its first
-                # column is the object *name*, which formulas never see.
-                values = list(PhenomicsCalculator.calcPhenomics(
-                    shape, pixmap, scale))[1:]
+                # Base values always come from the built-in measurement set,
+                # not the enabled-algorithm registry: unchecking DEFAULT
+                # hides its columns but formulas still need its numbers, and
+                # previewing another algorithm's columns would mislabel them.
+                rgbImg = qimage_to_cv2(pixmap.toImage())
+                mask = (shape.mask > 0).astype(np.uint8)
+                values = list(PhenomicsCalculator.default_algorithm(
+                    rgbImg, mask, scale))
                 label = tr('Preview from "{name}"',
                            name=shape.label or "object")
                 return values, True, label

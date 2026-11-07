@@ -77,7 +77,9 @@ Python。`Manage Algorithms → New Formula Traits...` 打开节点图编辑器�
 
 变量：`Area, Perimeter, MajorAxis, MinorAxis, AspectRatio, Solidity,
 Circularity, ConvexArea, ConvexPerimeter, Convexity, MeanB, MeanG, MeanR`。
-除零与缺失值产出 `nan`，不会中断批处理。
+这些基础值来自内置测量集，**始终可用**——在 Manage Algorithms 中取消勾选
+DEFAULT 只是不在表格中显示其列，不会使公式失输入。除零与缺失值产出
+`nan`，不会中断批处理。
 
 公式文件是 JSON，也可手工编辑。实现见 `pheno/formulaTraits.py`（求值）、
 `pheno/formulaGraph.py`（图模型、量纲分析）、`pheno/formulaCanvas.py`

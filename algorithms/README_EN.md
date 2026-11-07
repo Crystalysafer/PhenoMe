@@ -84,7 +84,10 @@ colour ratio, ...), you do not have to write Python at all.
 
 Variables: `Area, Perimeter, MajorAxis, MinorAxis, AspectRatio, Solidity,
 Circularity, ConvexArea, ConvexPerimeter, Convexity, MeanB, MeanG, MeanR`.
-Division by zero and missing values yield `nan` without interrupting a batch.
+These base values come from the built-in measurement set and are **always
+available** — unchecking DEFAULT in Manage Algorithms only hides its columns;
+it never starves formulas of their inputs. Division by zero and missing
+values yield `nan` without interrupting a batch.
 
 Formula files are plain JSON and can also be edited by hand. Implementation:
 `pheno/formulaTraits.py` (evaluation), `pheno/formulaGraph.py` (graph model and

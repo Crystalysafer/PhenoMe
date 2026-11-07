@@ -252,11 +252,13 @@ def make_algorithm(traits):
         return [trait.header() for trait in traits]
 
     def calc_traits(rgb_img, mask, scale_per_pixel=1.0):
-        # Base values come from the DEFAULT algorithm; formulas reuse that
-        # work instead of recomputing contours.
+        # Base values come from the built-in DEFAULT algorithm, bound
+        # directly rather than through the enabled-algorithm registry --
+        # unchecking DEFAULT only hides its columns and must never starve
+        # formulas of their inputs.
         from pheno.calcPheno import PhenomicsCalculator
-        base = PhenomicsCalculator.custom_algorithms.get("DEFAULT")
-        base_values = base(rgb_img, mask, scale_per_pixel) if base else None
+        base_values = PhenomicsCalculator.default_algorithm(
+            rgb_img, mask, scale_per_pixel)
         return [trait.evaluate(base_values) for trait in traits]
 
     return get_headers, calc_traits
