@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+dist/
+build/
+models/
+# Packaging lives in the private repo and is copied in only at build time.
+PhenoMe.spec
+PhenoMe.iss
+test_build.py
+build_v2.bat
+*.egg-info/
+.idea/
+.vscode/
+*.log
+installer/

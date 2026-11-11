@@ -1,0 +1,118 @@
+# torch/torchaudio/torchvision are pinned to +cu128 builds which are hosted on
+# the PyTorch index, not PyPI — this line makes `pip install -r` just work.
+--extra-index-url https://download.pytorch.org/whl/cu128
+aiohappyeyeballs==2.6.1
+aiohttp==3.11.14
+aiosignal==1.3.2
+annotated-types==0.7.0
+anyio==4.9.0
+async-timeout==5.0.1
+asyncer==0.0.8
+attrs==25.3.0
+certifi==2025.1.31
+charset-normalizer==3.4.1
+click==8.1.8
+colorama==0.4.6
+coloredlogs==15.0.1
+contourpy==1.3.1
+cycler==0.12.1
+distro==1.9.0
+exceptiongroup==1.2.2
+filelock==3.13.1
+filetype==1.2.0
+flatbuffers==25.2.10
+fonttools==4.56.0
+frozenlist==1.5.0
+fsspec==2024.6.1
+groovy==0.1.2
+h11==0.14.0
+httpcore==1.0.7
+huggingface-hub==0.29.3
+safetensors==0.6.2
+transformers==4.49.0
+humanfriendly==10.0
+idna==3.10
+imageio==2.37.0
+imgviz==1.7.6
+jsonschema==4.23.0
+jsonschema-specifications==2024.10.1
+kiwisolver==1.4.8
+lazy_loader==0.4
+llvmlite==0.44.0
+markdown-it-py==3.0.0
+MarkupSafe==2.1.5
+matplotlib==3.10.1
+mdurl==0.1.2
+mpmath==1.3.0
+multidict==6.2.0
+networkx==3.3
+numba==0.61.0
+nvidia-ml-py==13.615.71
+numpy==2.1.2
+# RulerNet requests CPUExecutionProvider explicitly — the CPU build avoids the
+# GPU provider DLLs that broke the packaged onnxruntime-gpu on clean machines.
+# Pinned to 1.19: onnxruntime 1.20/1.21 fails DLL init inside a PyInstaller
+# frozen app ("DLL load failed ... onnxruntime_pybind11_state").
+onnxruntime==1.19.0
+# Optional alternative segmenter (SAM2 Hiera-Tiny, ~150MB weights under
+# models/sam2/ — downloaded separately, not bundled). Selectable at startup;
+# brings hydra-core/omegaconf which need PyInstaller datas+hooks when packaging.
+sam2==1.1.0
+# contrib build required for cv2.mcc (color checker); headless variant because
+# the app never calls cv2.imshow — windows/web service need no cv2 GUI deps.
+opencv-contrib-python-headless==4.11.0.86
+orjson==3.10.15
+packaging==24.2
+pandas==2.2.3
+pillow==11.0.0
+platformdirs==4.3.7
+pooch==1.8.2
+propcache==0.3.0
+protobuf==6.30.1
+psutil==7.0.0
+pydantic==2.10.6
+pydantic_core==2.27.2
+Pygments==2.19.1
+PyMatting==1.1.13
+pyparsing==3.2.1
+PyQt5==5.15.11
+PyQt5-Qt5==5.15.2
+PyQt5_sip==12.17.0
+pyreadline3==3.5.4
+pyasn1==0.6.4
+pyasn1_modules==0.4.2
+python-dateutil==2.9.0.post0
+pytz==2025.1
+PyYAML==6.0.2
+QtPy==2.4.3
+referencing==0.36.2
+requests==2.32.3
+rich==13.9.4
+rpds-py==0.23.1
+ruff==0.11.2
+scikit-image==0.25.2
+scikit-learn==1.7.1
+scipy==1.15.2
+segment_anything==1.0.0
+semantic-version==2.10.0
+shapely==2.1.0
+shellingham==1.5.4
+six==1.17.0
+sniffio==1.3.1
+sympy==1.14.0
+tenacity==9.1.4
+tifffile==2025.3.13
+tomlkit==0.13.2
+# CUDA 12.8 wheels match the released Windows installer.
+# Keep torch, torchvision and torchaudio on the matching release versions.
+torch==2.7.1+cu128
+torchaudio==2.7.1+cu128
+torchvision==0.22.1+cu128
+tqdm==4.67.1
+typer==0.15.2
+typing_extensions==4.12.2
+tzdata==2025.2
+urllib3==2.3.0
+watchdog==6.0.0
+websockets==15.0.1
+yarl==1.18.3

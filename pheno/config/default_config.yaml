@@ -1,0 +1,39 @@
+shortcuts:
+  close: Ctrl+W
+  open: Ctrl+O
+  open_dir: Ctrl+U
+  quit: Ctrl+Q
+  # Ctrl+S writes the annotation sidecar (.pheno.json): the only artefact that can be
+  # reopened, and the one the unsaved-changes prompt already saves.
+  save: Ctrl+S
+  # Masks as 1-bit PNG files, for handing to tools that do not read .pheno.json.
+  # An export, not a save -- so it does not get the save shortcut, and no
+  # shortcut at all: the toolbar button is enough.
+  export_masks: None
+  export: Ctrl+E
+  loadCustom: None
+  manageAlgorithm: None
+
+
+  open_next: D
+  open_prev: A
+
+  zoom_in: Ctrl++
+  zoom_out: Ctrl+-
+  zoom_to_original: Ctrl+0
+  fit_window: Ctrl+F
+  fit_width: Ctrl+Shift+F
+
+  click: W
+  cut_out: Q
+  delete: Delete
+  auto: R
+  text_detect: T
+  edit_mask: B
+  review_batch: Ctrl+R
+
+  color_checker: C
+  ruler_detection: L
+  set_scale: S
+
+  undo: Ctrl+Z

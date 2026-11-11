@@ -1,0 +1,18 @@
+PhenoMe
+Copyright (C) 2026 Yunyu Chen
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, version 3 of the License (GPL-3.0).
+See the LICENSE file for the full license text.
+
+This software is based on labelme — the interactive annotation
+interface and parts of the application framework were derived from:
+
+    labelme: Image Polygonal Annotation with Python
+    https://github.com/wkentaro/labelme
+    Copyright (C) 2016 Kentaro Wada and contributors
+    Licensed under the GNU General Public License v3.0
+    (Zenodo DOI: 10.5281/zenodo.5711225)
+
+The name "PhenoMe" is a nod to labelme.
